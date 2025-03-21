@@ -4,10 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,11 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.baitapproject.R;
 import com.example.baitapproject.models.Book;
-import com.example.baitapproject.models.Category;
 
 import java.util.List;
 
-public class BookAdapter extends BaseAdapter {
+public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
     private Context context;
     private List<Book> bookList;
 
@@ -28,54 +25,42 @@ public class BookAdapter extends BaseAdapter {
         this.bookList = bookList;
     }
 
+    @NonNull
     @Override
-    public int getCount() {
-        return bookList.size();
+    public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_books, parent, false);
+        return new BookViewHolder(view);
     }
 
     @Override
-    public Object getItem(int position) {
-        return bookList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_books, parent, false);
-            holder = new ViewHolder();
-            holder.imageView = convertView.findViewById(R.id.image);
-            holder.textView = convertView.findViewById(R.id.title);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        // Lấy dữ liệu sách
+    public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
         Book book = bookList.get(position);
         holder.textView.setText(book.getTitle());
 
-        // Load ảnh bằng Glide (nếu có URL ảnh)
         Glide.with(context)
-                .load(book.getCoverUrl()) // Giả sử `imageUrl` là đường dẫn ảnh của sách
+                .load(book.getCoverUrl())
+                .placeholder(R.drawable.loading) // Ảnh tạm thời khi loading
                 .into(holder.imageView);
-
-        return convertView;
     }
+
+    @Override
+    public int getItemCount() {
+        return bookList.size();
+    }
+
     public void addBooks(List<Book> newBooks) {
         bookList.addAll(newBooks);
         notifyDataSetChanged();
     }
 
-    static class ViewHolder {
+    static class BookViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView;
+
+        public BookViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.image);
+            textView = itemView.findViewById(R.id.title);
+        }
     }
 }
-
