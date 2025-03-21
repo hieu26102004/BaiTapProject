@@ -42,7 +42,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
         // Load ảnh với Glide
         Glide.with(context)
-                .load(category.getUrl())
+                .load(category.getImages())
                 .into(holder.images);
 
 

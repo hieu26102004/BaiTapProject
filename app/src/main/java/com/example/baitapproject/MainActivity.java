@@ -2,9 +2,12 @@ package com.example.baitapproject;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -12,7 +15,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.baitapproject.adapter.BookAdapter;
 import com.example.baitapproject.adapter.CategoryAdapter;
+import com.example.baitapproject.models.Book;
 import com.example.baitapproject.models.Category;
 
 import java.util.List;
@@ -26,9 +31,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView userNameTextView;
 
     RecyclerView rcCate;
+    GridView gvBook;
     CategoryAdapter categoryAdapter;
+
+    BookAdapter bookAdapter;
     APIService apiService;
     List<Category> categoryList;
+
+    List<Book> bookList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +59,19 @@ public class MainActivity extends AppCompatActivity {
         } else {
             userNameTextView.setText("Hi! Guest");
         }
+
+        AnhXaCategory();
+        GetCategory();
+
+        AnhXaBook();
+        GetBooks();
     }
     private void AnhXaCategory(){
         rcCate = (RecyclerView) findViewById(R.id.rc_category);
+    }
+
+    private void AnhXaBook(){
+        gvBook = (GridView) findViewById(R.id.gvBook);
     }
 
     private void GetCategory() {
@@ -83,7 +103,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
                 Log.d("Logg", t.getMessage());
+                Toast.makeText(MainActivity.this, "Lỗi: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
+
+    private void GetBooks() {
+        apiService = RetrofitClient.getRetrofit().create(APIService.class);
+        apiService.getBookAll().enqueue(new Callback<List<Book>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Book>> call, @NonNull Response<List<Book>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    bookList = response.body(); // Nhận danh sách sách
+
+                    // Khởi tạo Adapter cho GridView
+                    bookAdapter = new BookAdapter(MainActivity.this, bookList);
+                    gvBook.setAdapter(bookAdapter);
+                } else {
+                    Toast.makeText(MainActivity.this, "Lỗi: Không thể lấy dữ liệu", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Book>> call, @NonNull Throwable t) {
+                Log.e("API_ERROR", "Lỗi kết nối: " + t.getMessage());
+                Toast.makeText(MainActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 }

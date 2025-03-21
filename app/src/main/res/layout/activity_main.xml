@@ -175,4 +175,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_bar" />
+
+    <GridView
+        android:id="@+id/gvBook"
+        android:layout_width="409dp"
+        android:layout_height="347dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rc_category" />
 </androidx.constraintlayout.widget.ConstraintLayout>

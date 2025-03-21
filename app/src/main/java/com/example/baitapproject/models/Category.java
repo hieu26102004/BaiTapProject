@@ -10,7 +10,15 @@ public class Category implements Serializable {
     @SerializedName("genre")
     private String genre;
     @SerializedName("url")
-    private String url;
+    private String images;
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
 
     public int getId() {
         return id;
@@ -20,13 +28,7 @@ public class Category implements Serializable {
         this.id = id;
     }
 
-    public String getUrl() {
-        return url;
-    }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public String getGenre() {
         return genre;
