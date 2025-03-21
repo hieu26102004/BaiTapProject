@@ -168,4 +168,25 @@
         </LinearLayout>
     </com.google.android.material.bottomappbar.BottomAppBar>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rc_category"
+        android:layout_width="407dp"
+        android:layout_height="111dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/app_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_bar"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <GridView
+        android:id="@+id/gvBook"
+        android:layout_width="409dp"
+        android:layout_height="347dp"
+        android:layout_marginTop="28dp"
+        android:numColumns="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rc_category" />
 </androidx.constraintlayout.widget.ConstraintLayout>
