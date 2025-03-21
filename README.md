@@ -19,19 +19,15 @@ Phân công:
 Giao diện:
 
   -Trang login:
-  
     ![image](https://github.com/user-attachments/assets/0cf05eb2-36f4-4c64-94fc-57dca2083179)
     
   -Trang đăng ký:
-  
     ![image](https://github.com/user-attachments/assets/5850f943-b46e-4c85-979d-8e6ae5397c8f)
     
   -Trang active account:
-  
     ![image](https://github.com/user-attachments/assets/d1445904-c7c6-4d4b-ac8d-d6f267b0a689)
     
   -Trang intro:
-  
     ![image](https://github.com/user-attachments/assets/fe594d0d-e62c-4af6-be0a-306eaf91ccb4)
     
   -Trang chính:
