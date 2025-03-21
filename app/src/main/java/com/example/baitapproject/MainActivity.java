@@ -25,6 +25,7 @@ import com.example.baitapproject.models.Book;
 import com.example.baitapproject.models.Category;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +34,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private DatabaseHandler db;
     private TextView userNameTextView;
+    private TextView userIdTextView;
 
     RecyclerView rcCate;
     GridView gvBook;
@@ -53,19 +55,16 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        db = new DatabaseHandler(this);
-        userNameTextView = findViewById(R.id.user_name);
-        ImageView userAvatarImageView = findViewById(R.id.imageViewSettings);
-        userAvatarImageView.setOnClickListener(v -> logout());
+        userNameTextView = findViewById(R.id.fullname);
+        userIdTextView = findViewById(R.id.user_id);
+        SharedPreferences preferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
+        String savedUsername = preferences.getString("USERNAME", null);
 
-        // Lấy tên người dùng đang đăng nhập và hiển thị
-        String fullName = db.getLoggedInUserFullName();
-        if (fullName != null) {
-            userNameTextView.setText("Hi! " + fullName);
+        if (savedUsername != null && !savedUsername.isEmpty()) {
+            getUserInfo(savedUsername);
         } else {
             userNameTextView.setText("Hi! Guest");
         }
-
         AnhXaCategory();
         GetCategory();
 
@@ -152,4 +151,28 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void getUserInfo(String username) {
+        APIService apiService = RetrofitClient.getRetrofit().create(APIService.class);
+        Call<Map<String, String>> call = apiService.getUserInfo(username);
+
+        call.enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String fullName = response.body().get("full_name");
+                    String userId = response.body().get("id");
+                    userNameTextView.setText("Hi! " + fullName);
+                    userIdTextView.setText("ID: " + userId);
+                } else {
+                    userNameTextView.setText("Hi! Guest");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                userNameTextView.setText("Hi! Guest");
+                Toast.makeText(MainActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

@@ -27,20 +27,20 @@
         app:layout_constraintTop_toTopOf="@id/user_avatar">
 
         <TextView
-            android:id="@+id/user_name"
+            android:id="@+id/fullname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hi! Nguyễn Hữu Trung"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/user_tagline"
+            android:id="@+id/user_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Eat and Order"
-            android:textColor="@android:color/white"
+            android:text=""
+            android:textColor="@android:color/black"
             android:textSize="14sp" />
     </LinearLayout>
 

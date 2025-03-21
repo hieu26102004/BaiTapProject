@@ -17,6 +17,7 @@ import com.example.baitapproject.dto.OtpRequest;
 import com.example.baitapproject.dto.RegisterRequest;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -36,4 +37,6 @@ public interface APIService {
     Call<User> login(@Body LoginRequest request);
     @GET("books/categories/{bien}")
     Call<List<Book>> getBookByCategory(@Path("bien") String bien);
+    @GET("/info/{username}")
+    Call<Map<String, String>> getUserInfo(@Path("username") String username);
 }
