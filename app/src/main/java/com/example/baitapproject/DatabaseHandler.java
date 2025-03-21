@@ -15,6 +15,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
+    private static final String COLLUMN_FULLNAME = "Guest";
     private static final String COLUMN_LOGGED_IN = "logged_in";
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -36,6 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String createTable = "CREATE TABLE " + TABLE_USER + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_USERNAME + " TEXT UNIQUE, " +
+                COLLUMN_FULLNAME + " TEXT, " +
                 COLUMN_PASSWORD + " TEXT, " +
                 COLUMN_LOGGED_IN + " INTEGER DEFAULT 0)";
         db.execSQL(createTable);
@@ -77,6 +79,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String username = cursor.getString(0);
             cursor.close();
             return username;
+        }
+        cursor.close();
+        return null;
+    }
+    // Lấy tên đầy đủ của người dùng đang đăng nhập
+    public String getLoggedInUserFullName() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + COLLUMN_FULLNAME + " FROM " + TABLE_USER +
+                " WHERE " + COLUMN_LOGGED_IN + " = 1", null);
+
+        if (cursor.moveToFirst()) {
+            String fullName = cursor.getString(0);
+            cursor.close();
+            return fullName;
         }
         cursor.close();
         return null;

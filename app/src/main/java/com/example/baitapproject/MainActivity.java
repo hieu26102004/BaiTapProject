@@ -1,6 +1,7 @@
 package com.example.baitapproject;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +10,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-
+    private DatabaseHandler db;
+    private TextView userNameTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,5 +22,15 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        db = new DatabaseHandler(this);
+        userNameTextView = findViewById(R.id.user_name);
+
+        // Lấy tên người dùng đang đăng nhập và hiển thị
+        String fullName = db.getLoggedInUserFullName();
+        if (fullName != null) {
+            userNameTextView.setText("Hi! " + fullName);
+        } else {
+            userNameTextView.setText("Hi! Guest");
+        }
     }
 }
