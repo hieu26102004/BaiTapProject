@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.baitapproject.adapter.BookAdapter;
@@ -24,6 +26,7 @@ import com.example.baitapproject.adapter.CategoryAdapter;
 import com.example.baitapproject.models.Book;
 import com.example.baitapproject.models.Category;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView userNameTextView;
 
     RecyclerView rcCate;
-    GridView gvBook;
+    RecyclerView rcBook;
     CategoryAdapter categoryAdapter;
 
     BookAdapter bookAdapter;
@@ -43,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
     List<Category> categoryList;
 
     List<Book> bookList;
+    private boolean isLoading = false;
+    private List<Book> displayedBooks = new ArrayList<>();
+
+    private int currentPage = 0;
+    private final int pageSize = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,31 +61,25 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        db = new DatabaseHandler(this);
-        userNameTextView = findViewById(R.id.user_name);
-        ImageView userAvatarImageView = findViewById(R.id.imageViewSettings);
-        userAvatarImageView.setOnClickListener(v -> logout());
+        userNameTextView = findViewById(R.id.full_name);
 
-        // Lấy tên người dùng đang đăng nhập và hiển thị
-        String fullName = db.getLoggedInUserFullName();
-        if (fullName != null) {
-            userNameTextView.setText("Hi! " + fullName);
-        } else {
-            userNameTextView.setText("Hi! Guest");
-        }
+        ImageView btnLogout = findViewById(R.id.imageViewSettings);
+        btnLogout.setOnClickListener(v -> logout());
 
-        AnhXaCategory();
-        GetCategory();
+        SharedPreferences preferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
+        String fullName = preferences.getString("FULLNAME", "Guest");
+        userNameTextView.setText("Hi! " + fullName);
 
         AnhXaBook();
-        GetBooks("Programming");
+        AnhXaCategory();
+        GetCategory();
     }
     private void AnhXaCategory(){
         rcCate = (RecyclerView) findViewById(R.id.rc_category);
     }
 
     private void AnhXaBook(){
-        gvBook = (GridView) findViewById(R.id.gvBook);
+        rcBook = findViewById(R.id.recyclerViewBook);
     }
 
     private void GetCategory() {
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
                     rcCate.setLayoutManager(layoutManager);
                     rcCate.setAdapter(categoryAdapter);
                     categoryAdapter.notifyDataSetChanged();
+
+                    GetBooks("Programming");
                 } else {
                     int statusCode = response.code();
                     // Handle request errors depending on status code
@@ -124,10 +128,21 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     bookList = response.body(); // Nhận danh sách sách
                     txtCategory.setText(categoryName);
-                    // Khởi tạo Adapter cho GridView
-                    bookAdapter = new BookAdapter(MainActivity.this, bookList);
 
-                    gvBook.setAdapter(bookAdapter);
+                    displayedBooks.clear();
+                    int initialLoadSize = Math.min(10, bookList.size());
+                    displayedBooks.addAll(bookList.subList(0, initialLoadSize));
+
+
+
+
+                    bookAdapter = new BookAdapter(MainActivity.this, displayedBooks);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 3);
+                    rcBook.setLayoutManager(gridLayoutManager);
+                    rcBook.setAdapter(bookAdapter);
+
+                    initScrollListener();
+
                 } else {
                     Toast.makeText(MainActivity.this, "Lỗi: Không thể lấy dữ liệu", Toast.LENGTH_SHORT).show();
                 }
@@ -140,6 +155,50 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private void initScrollListener() {
+        rcBook.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView rcBook, int dx, int dy) {
+                super.onScrolled(rcBook, dx, dy);
+                GridLayoutManager layoutManager = (GridLayoutManager) rcBook.getLayoutManager();
+
+                if (!isLoading && layoutManager != null &&
+                        layoutManager.findLastCompletelyVisibleItemPosition() == displayedBooks.size() - 1) {
+                    if (displayedBooks.size() < bookList.size()) {
+                        loadMore();
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void loadMore() {
+        if (displayedBooks.size() >= bookList.size()) {
+            isLoading = false;
+            return;
+        }
+
+        isLoading = true;
+        Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            int start = displayedBooks.size();
+            int end = Math.min(start + 6, bookList.size());
+
+            if (start < end) {
+                displayedBooks.addAll(bookList.subList(start, end));
+                bookAdapter.notifyItemRangeInserted(start, end - start);
+            }
+
+            if (displayedBooks.size() >= bookList.size()) {
+                Toast.makeText(MainActivity.this, "Hết sách rồi", Toast.LENGTH_SHORT).show();
+            }
+            isLoading = false;
+        }, 1500);
+    }
+
+
+
 
     private void logout() {
         SharedPreferences preferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);

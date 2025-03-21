@@ -27,11 +27,11 @@
         app:layout_constraintTop_toTopOf="@id/user_avatar">
 
         <TextView
-            android:id="@+id/user_name"
+            android:id="@+id/full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hi! Nguyễn Hữu Trung"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -172,18 +172,18 @@
         android:id="@+id/rc_category"
         android:layout_width="407dp"
         android:layout_height="111dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="364dp"
         app:layout_constraintBottom_toTopOf="@+id/app_bar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_bar"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/search_bar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
 
         app:layout_constraintBottom_toTopOf="@id/app_bar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -192,24 +192,22 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txtCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textAlignment="center" />
+                android:text=""
+                android:textAlignment="center"
+                android:layout_marginBottom="10dp"/>
 
-            <GridView
-                android:id="@+id/gvBook"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewBook"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:numColumns="3"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="8dp"
-                android:horizontalSpacing="8dp"/>
+                android:layout_height="match_parent"
+                android:stretchMode="columnWidth"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
