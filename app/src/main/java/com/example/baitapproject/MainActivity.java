@@ -1,8 +1,12 @@
 package com.example.baitapproject;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         });
         db = new DatabaseHandler(this);
         userNameTextView = findViewById(R.id.user_name);
+        ImageView userAvatarImageView = findViewById(R.id.imageViewSettings);
+        userAvatarImageView.setOnClickListener(v -> logout());
 
         // Lấy tên người dùng đang đăng nhập và hiển thị
         String fullName = db.getLoggedInUserFullName();
@@ -135,5 +141,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void logout() {
+        SharedPreferences preferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("USERNAME");
+        editor.apply();
+
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
 }
