@@ -49,17 +49,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Kiểm tra đăng nhập
-    public boolean checkLogin(String username, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USER +
-                        " WHERE " + COLUMN_USERNAME + " = ? AND " + COLUMN_PASSWORD + " = ?",
-                new String[]{username, password});
-
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
-        return exists;
-    }
 
     // Lưu trạng thái đăng nhập
     public void setLoggedIn(String username, boolean status) {
@@ -96,6 +85,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         cursor.close();
         return null;
+    }
+    public void addUser(String username, String fullName, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USERNAME, username);
+        values.put(COLLUMN_FULLNAME, fullName);
+        values.put(COLUMN_PASSWORD, password);
+        values.put(COLUMN_LOGGED_IN, 1); // Đánh dấu đã đăng nhập
+
+        db.insert(TABLE_USER, null, values);
+        db.close();
     }
 
 }

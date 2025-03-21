@@ -25,6 +25,7 @@ import retrofit2.Response;
 
 public class OtpRegisterActivity extends AppCompatActivity {
     private ImageButton btnOtp;
+    RetrofitClient retrofitClient;
     APIService apiService;
     //Phạm Danh Hưởng - 22110344
     @Override
@@ -39,7 +40,8 @@ public class OtpRegisterActivity extends AppCompatActivity {
         });
 
         btnOtp = findViewById(R.id.btnOtp);
-        Intent intent = getIntent();
+        retrofitClient.getRetrofit();
+        apiService = RetrofitClient.getRetrofit().create(APIService.class);
         btnOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +49,7 @@ public class OtpRegisterActivity extends AppCompatActivity {
                 String otp = editTextOtp.getText().toString().trim();
 
 
-                String email = intent.getStringExtra("email");
+                String email = getIntent().getStringExtra("email");
                 OtpRequest otpRequest = new OtpRequest(email, otp);
                 activateAccount(otpRequest);
             }

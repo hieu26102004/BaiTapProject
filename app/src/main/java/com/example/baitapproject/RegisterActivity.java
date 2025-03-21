@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     if (response.body().isSuccess()) {
-                        Toast.makeText(RegisterActivity.this, "OTP đã được gửi!", Toast.LENGTH_SHORT).show();
+                //        Toast.makeText(RegisterActivity.this, "OTP đã được gửi!", Toast.LENGTH_SHORT).show();
                         openOtpRegisterActivity(request.getEmail()); // Mở activity OTP
                         finish();
                     } else {

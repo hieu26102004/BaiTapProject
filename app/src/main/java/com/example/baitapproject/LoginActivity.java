@@ -1,5 +1,6 @@
 package com.example.baitapproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,16 +22,35 @@ public class LoginActivity extends AppCompatActivity {
     ImageButton btn_login;
     TextView etUsername;
     TextView etPassword;
+    TextView tvRegister;
+    DatabaseHandler dbHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
+
+        dbHandler = new DatabaseHandler(this);
+        String loggedInUser = dbHandler.getLoggedInUser();
+        if (loggedInUser != null) {
+            openMainActivity();
+        }
+
+        tvRegister = findViewById(R.id.textRegister);
+        tvRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
         btn_login = findViewById(R.id.imageButton);
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loginUser();
+
             }
         });
     }
@@ -49,8 +69,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    // Lưu user vào SQLite
+                    User user = response.body();
 
+                    dbHandler.QueryData("INSERT INTO User (username, Guest, password, logged_in) " +
+                            "VALUES ('" + user.getUsername() + "', '" + user.getFullname() + "', '" + user.getPassword() + "', 1)");
+
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                    openMainActivity();
                 } else {
                     Toast.makeText(LoginActivity.this, "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show();
                 }
@@ -63,5 +89,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    public void openMainActivity() {
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
+    }
 
 }
