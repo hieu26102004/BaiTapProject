@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     txtCategory.setText(categoryName);
 
                     displayedBooks.clear();
-                    int initialLoadSize = Math.min(10, bookList.size());
+                    int initialLoadSize = Math.min(3, bookList.size());
                     displayedBooks.addAll(bookList.subList(0, initialLoadSize));
 
 
