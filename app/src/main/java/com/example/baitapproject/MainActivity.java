@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         GetCategory();
 
         AnhXaBook();
-        GetBooks();
+        GetBooks("Programming");
     }
     private void AnhXaCategory(){
         rcCate = (RecyclerView) findViewById(R.id.rc_category);
@@ -108,16 +108,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void GetBooks() {
+    public void GetBooks(String categoryName) {
+        TextView txtCategory = (TextView) findViewById(R.id.txtCategory);
         apiService = RetrofitClient.getRetrofit().create(APIService.class);
-        apiService.getBookAll().enqueue(new Callback<List<Book>>() {
+
+        apiService.getBookByCategory(categoryName).enqueue(new Callback<List<Book>>() {
             @Override
             public void onResponse(@NonNull Call<List<Book>> call, @NonNull Response<List<Book>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     bookList = response.body(); // Nhận danh sách sách
-
+                    txtCategory.setText(categoryName);
                     // Khởi tạo Adapter cho GridView
                     bookAdapter = new BookAdapter(MainActivity.this, bookList);
+
                     gvBook.setAdapter(bookAdapter);
                 } else {
                     Toast.makeText(MainActivity.this, "Lỗi: Không thể lấy dữ liệu", Toast.LENGTH_SHORT).show();
@@ -131,5 +134,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

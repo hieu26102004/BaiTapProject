@@ -21,7 +21,7 @@ public class Book implements Serializable {
     @SerializedName("publication_date")
     private LocalDate publication_date;
 
-    @SerializedName("cover_url")
+    @SerializedName("coverUrl")
     private String coverUrl;
 
     public int getBook_id() {

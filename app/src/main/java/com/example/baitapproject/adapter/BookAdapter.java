@@ -68,6 +68,10 @@ public class BookAdapter extends BaseAdapter {
 
         return convertView;
     }
+    public void addBooks(List<Book> newBooks) {
+        bookList.addAll(newBooks);
+        notifyDataSetChanged();
+    }
 
     static class ViewHolder {
         ImageView imageView;

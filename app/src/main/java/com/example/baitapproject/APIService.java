@@ -20,6 +20,7 @@ import java.util.List;
 
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface APIService {
     @GET("books/categories")
@@ -33,6 +34,6 @@ public interface APIService {
     Call<ApiResponse> activateAccount(@Body OtpRequest request);
     @POST("/auth/login")
     Call<User> login(@Body LoginRequest request);
-    @GET("books/recent")
-    Call<List<Book>> getBookAll();
+    @GET("books/categories/{bien}")
+    Call<List<Book>> getBookByCategory(@Path("bien") String bien);
 }

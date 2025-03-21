@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.baitapproject.MainActivity;
 import com.example.baitapproject.R;
 import com.example.baitapproject.models.Category;
 
@@ -67,6 +68,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String name = genre.getText().toString();
+                    ((MainActivity) context).GetBooks(name);
                     // Xử lý khi nhấp vào 1 item category
                     Toast.makeText(context, "Bạn đã chọn category: "
                             + genre.getText().toString(), Toast.LENGTH_SHORT).show();
