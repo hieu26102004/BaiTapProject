@@ -2,11 +2,16 @@ Api của ứng dụng: https://github.com/phamdanhhuong/libraryapi.git
 
 
 Phân công:
-Phạm Danh Hưởng - 22110344 : Làm UI trang đăng ký, nhập otp kích hoạt, chỉnh sửa API
-Phạm Ngọc Duy - 22110297 :
-Nguyễn Hữu Ngọc Lam - 22110362 :
-Lê Đăng Hiếu - 22110322 :
-Nguyễn Văn Luân - 22110373 :
+
+Phạm Danh Hưởng - 22110344 : Làm trang đăng ký, nhập otp kích hoạt, chỉnh sửa API
+
+Phạm Ngọc Duy - 22110297 : Làm trang intro, Lưu thông tin đăng nhập
+
+Nguyễn Hữu Ngọc Lam - 22110362 : Load thông tin từ api
+
+Lê Đăng Hiếu - 22110322 : Chức năng đăng ký
+
+Nguyễn Văn Luân - 22110373 :  Chức năng đăng nhập
 
 
 
