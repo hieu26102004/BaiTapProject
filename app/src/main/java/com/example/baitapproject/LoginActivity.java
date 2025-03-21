@@ -1,8 +1,13 @@
 package com.example.baitapproject;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,12 +26,29 @@ public class LoginActivity extends AppCompatActivity {
     ImageButton btn_login;
     TextView etUsername;
     TextView etPassword;
+    CheckBox cbRememberMe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
+
+        // Kiểm tra xem đã lưu username trong SharedPreferences chưa
+        SharedPreferences preferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
+        String savedUsername = preferences.getString("USERNAME", null);
+        if (savedUsername != null) {
+            // Nếu đã lưu, chuyển sang MainActivity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        // Ánh xạ view
+        etUsername = findViewById(R.id.editTextName);
+        etPassword = findViewById(R.id.editTextPassword);
         btn_login = findViewById(R.id.imageButton);
+        cbRememberMe = findViewById(R.id.cbmemberme);
+
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,23 +56,32 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
     private void loginUser() {
         APIService apiService = RetrofitClient.getRetrofit().create(APIService.class);
 
-        etUsername = findViewById(R.id.editTextName);
-        etPassword = findViewById(R.id.editTextPassword);
-        // Giả sử bạn có EditText cho username và password
         String username = etUsername.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         LoginRequest loginRequest = new LoginRequest(username, password);
 
+        // Gọi API đăng nhập
         Call<User> call = apiService.login(loginRequest);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    // Nếu người dùng chọn "Remember Me", lưu username vào SharedPreferences
+                    if (cbRememberMe.isChecked()) {
+                        SharedPreferences preferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("USERNAME", username);
+                        editor.apply();
+                    }
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-
+                    // Chuyển sang MainActivity
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show();
                 }
@@ -62,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
 }
