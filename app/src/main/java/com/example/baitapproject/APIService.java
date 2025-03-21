@@ -12,6 +12,6 @@ public interface APIService {
     @GET("books/categories")
     Call<List<Category>> getCategoryAll();
 
-    @GET("books")
+    @GET("books/recent")
     Call<List<Book>> getBookAll();
 }
