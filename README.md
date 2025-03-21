@@ -31,7 +31,8 @@ Giao diện:
     ![image](https://github.com/user-attachments/assets/fe594d0d-e62c-4af6-be0a-306eaf91ccb4)
     
   -Trang chính:
-    
+    ![image](https://github.com/user-attachments/assets/b33279cd-31be-4f83-9216-926cd1ae5848)
+
 
 
 

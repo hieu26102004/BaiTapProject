@@ -17,8 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.baitapproject.adapter.BookAdapter;
@@ -28,6 +28,7 @@ import com.example.baitapproject.models.Category;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,8 +37,10 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private DatabaseHandler db;
     private TextView userNameTextView;
+    private TextView userIdTextView;
 
     RecyclerView rcCate;
+    
     RecyclerView rcBook;
     CategoryAdapter categoryAdapter;
 
@@ -61,18 +64,25 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        userNameTextView = findViewById(R.id.full_name);
+        ImageView userAvatarImageView = findViewById(R.id.imageViewLogout);
+        userAvatarImageView.setOnClickListener(v -> logout());
 
-        ImageView btnLogout = findViewById(R.id.imageViewSettings);
-        btnLogout.setOnClickListener(v -> logout());
+        userNameTextView = findViewById(R.id.fullname);
+        userIdTextView = findViewById(R.id.user_id);
+        SharedPreferences preferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
+        String savedUsername = preferences.getString("USERNAME", null);
 
-        SharedPreferences preferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
-        String fullName = preferences.getString("FULLNAME", "Guest");
-        userNameTextView.setText("Hi! " + fullName);
-
-        AnhXaBook();
+        if (savedUsername != null && !savedUsername.isEmpty()) {
+            getUserInfo(savedUsername);
+        } else {
+            savedUsername = getIntent().getStringExtra("username");
+            getUserInfo(savedUsername);
+        }
         AnhXaCategory();
         GetCategory();
+
+        AnhXaBook();
+        GetBooks("Programming");
     }
     private void AnhXaCategory(){
         rcCate = (RecyclerView) findViewById(R.id.rc_category);
@@ -102,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
                     rcCate.setLayoutManager(layoutManager);
                     rcCate.setAdapter(categoryAdapter);
                     categoryAdapter.notifyDataSetChanged();
-
                     GetBooks("Programming");
                 } else {
                     int statusCode = response.code();
@@ -129,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                     bookList = response.body(); // Nhận danh sách sách
                     txtCategory.setText(categoryName);
 
+                    rcBook.setAdapter(bookAdapter);
                     displayedBooks.clear();
                     int initialLoadSize = Math.min(3, bookList.size());
                     displayedBooks.addAll(bookList.subList(0, initialLoadSize));
@@ -211,4 +221,28 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void getUserInfo(String username) {
+        APIService apiService = RetrofitClient.getRetrofit().create(APIService.class);
+        Call<Map<String, String>> call = apiService.getUserInfo(username);
+
+        call.enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String fullName = response.body().get("full_name");
+                    String userId = response.body().get("id");
+                    userNameTextView.setText("Hi! " + fullName);
+                    userIdTextView.setText("ID: " + userId);
+                } else {
+                    userNameTextView.setText("Hi! Guest");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, String>> call, Throwable t) {
+                userNameTextView.setText("Hi! Guest");
+                Toast.makeText(MainActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

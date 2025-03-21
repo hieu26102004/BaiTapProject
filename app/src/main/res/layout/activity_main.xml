@@ -27,7 +27,7 @@
         app:layout_constraintTop_toTopOf="@id/user_avatar">
 
         <TextView
-            android:id="@+id/full_name"
+            android:id="@+id/fullname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hi! Nguyễn Hữu Trung"
@@ -36,11 +36,11 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/user_tagline"
+            android:id="@+id/user_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Eat and Order"
-            android:textColor="@android:color/white"
+            android:text=""
+            android:textColor="@android:color/black"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -150,17 +150,17 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imageViewSettings"
+                    android:id="@+id/imageViewLogout"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/setting" />
+                    app:srcCompat="@drawable/logout" />
 
                 <TextView
-                    android:id="@+id/textViewSettings"
+                    android:id="@+id/textViewLogout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Settings"
+                    android:text="Log out"
                     android:textAlignment="center"
                     android:textColor="#676767"
                     android:textSize="12sp" />

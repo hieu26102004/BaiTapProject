@@ -29,7 +29,6 @@ public class HomeActivity extends AppCompatActivity {
                 String loggedInUser = databaseHandler.getLoggedInUser();
                 if (loggedInUser != null) {
                     Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                    intent.putExtra("username", loggedInUser);
                     startActivity(intent);
                     finish();
                 }

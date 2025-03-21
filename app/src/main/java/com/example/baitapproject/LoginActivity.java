@@ -4,17 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.baitapproject.dto.LoginRequest;
 import com.example.baitapproject.models.User;
 
 import retrofit2.Call;
@@ -79,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // Nếu người dùng chọn "Remember Me", lưu username vào SharedPreferences
                     if (cbRememberMe.isChecked()) {
                         SharedPreferences preferences = getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = preferences.edit();
@@ -87,9 +84,13 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("FULLNAME", response.body().getFullname());
                         editor.apply();
                     }
+                    else {
+
+                    }
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                     // Chuyển sang MainActivity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("username", etUsername.getText().toString().trim());
                     startActivity(intent);
                     finish();
                 } else {
@@ -103,7 +104,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 }
