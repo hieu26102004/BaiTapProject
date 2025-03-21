@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        ImageView userAvatarImageView = findViewById(R.id.imageViewSettings);
+        userAvatarImageView.setOnClickListener(v -> logout());
+
         userNameTextView = findViewById(R.id.fullname);
         userIdTextView = findViewById(R.id.user_id);
         SharedPreferences preferences = getSharedPreferences("MyAppPreferences", MODE_PRIVATE);
@@ -63,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         if (savedUsername != null && !savedUsername.isEmpty()) {
             getUserInfo(savedUsername);
         } else {
-            userNameTextView.setText("Hi! Guest");
+            savedUsername = getIntent().getStringExtra("username");
+            getUserInfo(savedUsername);
         }
         AnhXaCategory();
         GetCategory();

@@ -86,9 +86,13 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("USERNAME", username);
                         editor.apply();
                     }
+                    else {
+
+                    }
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                     // Chuyển sang MainActivity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("username", etUsername.getText().toString().trim());
                     startActivity(intent);
                     finish();
                 } else {
