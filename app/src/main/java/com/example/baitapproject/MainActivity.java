@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        ImageView userAvatarImageView = findViewById(R.id.imageViewSettings);
+        ImageView userAvatarImageView = findViewById(R.id.imageViewLogout);
         userAvatarImageView.setOnClickListener(v -> logout());
 
         userNameTextView = findViewById(R.id.fullname);

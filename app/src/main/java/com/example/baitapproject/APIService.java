@@ -1,5 +1,6 @@
 package com.example.baitapproject;
 
+import com.example.baitapproject.dto.LoginRequest;
 import com.example.baitapproject.models.Book;
 import com.example.baitapproject.models.Category;
 import com.example.baitapproject.models.User;
@@ -10,8 +11,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 
-import retrofit2.Call;
-
 import com.example.baitapproject.dto.ApiResponse;
 import com.example.baitapproject.dto.OtpRequest;
 import com.example.baitapproject.dto.RegisterRequest;
@@ -19,8 +18,6 @@ import com.example.baitapproject.dto.RegisterRequest;
 import java.util.List;
 import java.util.Map;
 
-import retrofit2.http.Body;
-import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface APIService {
