@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser() {
         APIService apiService = RetrofitClient.getRetrofit().create(APIService.class);
 
-        etUsername = findViewById(R.id.editTextTextEmailAddress);
-        etPassword = findViewById(R.id.editTextTextPassword);
+        etUsername = findViewById(R.id.editTextName);
+        etPassword = findViewById(R.id.editTextPassword);
         // Giả sử bạn có EditText cho username và password
         String username = etUsername.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                    // Tiến hành chuyển sang Activity khác hoặc lưu thông tin người dùng
+
                 } else {
                     Toast.makeText(LoginActivity.this, "Đăng nhập thất bại!", Toast.LENGTH_SHORT).show();
                 }
