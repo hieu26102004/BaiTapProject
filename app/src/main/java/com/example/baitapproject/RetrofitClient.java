@@ -8,7 +8,7 @@ public class RetrofitClient {
     public static Retrofit getRetrofit(){
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://")
+                    .baseUrl("http://localhost:8080/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
